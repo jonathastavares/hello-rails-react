@@ -2,46 +2,48 @@ import React from "react"
 import { connect } from "react-redux"
 import { createStructuredSelector } from "reselect"
 
-const GET_THINGS_REQUEST = "GET_THINGS_REQUEST";
-const GET_THINGS_SUCCESS = "GET_THINGS_SUCCESS";
+const GET_GREETINGS_REQUEST = "GET_GREETINGS_REQUEST";
+const GET_GREETINGS_SUCCESS = "GET_GREETINGS_SUCCESS";
 
-function getThings() {
+function getGreetings() {
   return dispatch => {
-    dispatch({ type: GET_THINGS_REQUEST });
-    return fetch(`v1/things.json`)
+    dispatch({ type: GET_GREETINGS_REQUEST });
+    return fetch('/greetings')
     .then(response => response.json())
-    .then(json => dispatch(getThingsSuccess(json)))
+    .then(json => dispatch(getGreetingsSuccess(json)))
     .catch(error => console.log(error));
   }
 }
 
-export function getThingsSuccess(json) {
+export function getGreetingsSuccess(json) {
   return {
-    type: GET_THINGS_SUCCESS,
+    type: GET_GREETINGS_SUCCESS,
     json
   }
 }
 
 class HelloWorld extends React.Component {
   render () {
-    const { things } = this.props;
-    const thingsList = things.map((thing) => {
-      return <li key={ thing.guid }>{ thing.name } { thing.guid }</li>
+    console.log(this.props);
+    const { greetings } = this.props;
+    const greetingsList = greetings.map((greeting) => {
+      return <li key={ greeting.id }>{ greeting.id } - { greeting.greet }</li>
     })
+    console.log(greetings);
     return (
       <React.Fragment>
         Greeting: {this.props.greeting}
-        <button className="getThingsBtn" onClick={() => this.props.getThings()}>getThings</button>
+        <button className="getGreetingsBtn" onClick={() => this.props.getGreetings()}>Get Greetings</button>
         <br />
-        <ul>{ thingsList }</ul>
+        <ul>{ greetingsList }</ul>
       </React.Fragment>
     );
   }
 }
 
 const structuredSelector = createStructuredSelector({
-  things: state => state.things,
+  greetings: state => state.greetings,
 });
 
-const mapDispatchToProps = { getThings };
+const mapDispatchToProps = { getGreetings };
 export default connect(structuredSelector, mapDispatchToProps)(HelloWorld);

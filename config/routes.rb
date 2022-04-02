@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   get '*page', to: 'pages#index', constraints: -> (req) do
     !req.xhr? && req.format.html?
   end
-  namespace :v1, defaults: { formart: 'json' } do
-    get 'things', to: 'things#index'
-  end
+  get '/greetings', to: 'greetings#index'
   root "pages#index"
 end
